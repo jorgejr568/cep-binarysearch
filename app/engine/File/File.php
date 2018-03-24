@@ -33,8 +33,16 @@ class File
         return fread($this->stream,$bytes);
     }
 
+    public function rewind(){
+        rewind($this->stream);
+        return $this;
+    }
+
     public function close(){
         fclose($this->stream);
         return $this;
     }
+
+
+
 }

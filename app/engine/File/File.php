@@ -19,7 +19,10 @@ class File
      * @return $this
      */
     public function open($path, $mode){
-        $this->stream=fopen($path,$mode);
+        if(!$this->stream=fopen($path,$mode)){
+            printf("ERRO 500 - CEP DAT FILE WASN'T FOUND!\n");
+            exit(500);
+        }
         return $this;
     }
 

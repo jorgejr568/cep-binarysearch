@@ -1,6 +1,8 @@
 <?php
 namespace CEPSearcher;
 
+use CEPSearcher\Controller\AddressController;
+
 class App{
     private $structure=[
         "config" => [
@@ -10,6 +12,7 @@ class App{
         "model" => "*",
         "engine" => "*",
         "fn" => "*",
+        "controller" => "*",
     ];
     private function require_dir($dir_path){
         rtrim($dir_path,"/");
@@ -38,6 +41,8 @@ class App{
                         . ".php";
             }
         }
+        $addressController=new AddressController();
+        $addressController->run();
     }
 }
 

@@ -3,6 +3,9 @@ namespace CEPSearcher;
 
 class App{
     private $structure=[
+        "config" => [
+            "app"
+        ],
         "exception" => "*",
         "model" => "*",
         "engine" => "*",

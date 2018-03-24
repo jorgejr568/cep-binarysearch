@@ -28,7 +28,7 @@ class File
 
     public function read($bytes,$offset=null){
         if($offset){
-            fseek($this->stream,$offset);
+            $this->seek($offset);
         }else rewind($this->stream);
         return fread($this->stream,$bytes);
     }
@@ -43,6 +43,15 @@ class File
         return $this;
     }
 
+    public function seek($offset){
+        fseek($this->stream,$offset);
+        return $this;
+    }
 
+    public function write($content,$offset=null,$length=null){
+        if($offset===0) $this->rewind();
+        elseif($offset>0) $this->seek($offset);
 
+        fwrite($this->stream,$content,$length);
+    }
 }

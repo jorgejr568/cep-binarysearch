@@ -131,7 +131,7 @@ class Address
 
     /**
      * @param $line
-     * @return Address
+     * @return Address | null
      * @throws InvalidLineAddress
      */
     public static function create_from_line($line){
@@ -144,5 +144,16 @@ class Address
             ->estado(substr($line,216,72))
             ->uf(substr($line,288,2))
             ->cep(substr($line,290,8));
+    }
+
+    public function blank_space(){
+        return " \n";
+    }
+    public function toLine(){
+        $line="";
+        $address_template=config("address_template");
+        foreach ($address_template as $field => $length)
+            $line.=$this->$field();
+        return $line;
     }
 }

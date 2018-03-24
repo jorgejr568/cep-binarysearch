@@ -3,9 +3,9 @@ namespace CEPSearcher;
 
 class App{
     private $structure=[
+        "exception" => "*",
         "model" => "*",
         "engine" => "*",
-        "exception" => "*",
         "fn" => "*",
     ];
     private function require_dir($dir_path){

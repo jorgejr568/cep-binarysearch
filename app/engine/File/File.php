@@ -32,5 +32,6 @@ class File
 
     public function close(){
         fclose($this->stream);
+        return $this;
     }
 }

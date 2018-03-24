@@ -22,3 +22,17 @@ On application root, paste this on console
 ```bash
 php -S 0.0.0.0:8888 &
 ```
+
+## Run
+
+### Console
+```bash
+php run.php [CEP]
+```
+- Replace \[CEP\] with the cep you want to check (Numbers-only)
+
+### Browser
+
+- Access http://your-server/run.php?cep=\[CEP\]
+- Replace \[CEP\] with the cep you want to check
+- Replace your-server with your local host or PHP built in server(Previous step)

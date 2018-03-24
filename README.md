@@ -33,6 +33,6 @@ php run.php [CEP]
 
 ### Browser
 
-- Access http://your-server/run.php?cep=\[CEP\]
+- Access http://your-server/run.php?cep=[CEP]
 - Replace \[CEP\] with the cep you want to check
-- Replace your-server with your local host or PHP built in server(Previous step)
+- Replace your-server with your local host or PHP built in server ([Previous step](#serving-optional))

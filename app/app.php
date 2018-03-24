@@ -1,4 +1,6 @@
 <?php
+namespace CEPSearcher;
+
 class App{
     private $structure=[
         "model" => "*",

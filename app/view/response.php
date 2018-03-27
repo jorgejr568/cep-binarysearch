@@ -60,7 +60,7 @@
 
             <div class="row">
                 <div class="col-md-6 col-lg-6 col-lg-offset-3 col-md-offset-3 col-sm-12 col-sm-offset-0">
-                    <h4 class="text-success" id="arrayConsultsCollapseAction">Array consults (<?= count($this->consults());?>) <i class="far fa-plus-square"></i></h4>
+                    <h4 class="text-success" id="arrayConsultsCollapseAction"><i class="far fa-plus-square"></i> Array consults (<?= count($this->consults());?>)</h4>
                     <div class="row" id="arrayConsultsCollapse">
                         <div class="col-xs-12">
                             <hr>
@@ -104,5 +104,17 @@
             </div>
         <?php endif;?>
     </div>
+
+    <script
+            src="https://code.jquery.com/jquery-3.3.1.js"
+            integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+            crossorigin="anonymous"></script>
+    <script>
+        $('#arrayConsultsCollapseAction').click(function(){
+            $i=$(this).find('i');
+            $i.toggleClass("fa-plus-square fa-minus-square");
+            $('#arrayConsultsCollapse').slideToggle(100);
+        });
+    </script>
 </body>
 </html>

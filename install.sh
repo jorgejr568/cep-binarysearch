@@ -4,4 +4,6 @@ echo "-> ENTERING ON PROJECT DIRECTORY" &&
 cd cep-binarysearch/ &&
 echo "-> UNZIPING CEP DAT FILE" &&
 unzip -d ./app/data ./app/data/cep.zip &&
+echo "-> REMOVING INSTALL SCRIPT" &&
+rm ../install.sh &&
 echo "-> YOU'RE ALL SET UP!"

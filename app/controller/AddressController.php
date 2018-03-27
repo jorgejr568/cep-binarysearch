@@ -16,47 +16,68 @@ use CEPSearcher\Model\Address;
 
 class AddressController
 {
-//    public function binarySearch(File $file,$cep, $line_size, $min, $max){
-//
-//        $middle=ceil(($max+$min)/2);
-//        print_r(compact(['min','middle','max']));
-//        /** @var array <Address> $lines */
-//        $lines=[
-//            "min" => $file->read($line_size,($line_size*$min)),
-//            "middle" => $file->read($line_size,($line_size*$middle)),
-//            "max" => $file->read($line_size,($line_size*$max))
-//        ];
-//
-//        try {
-//            $lines=array_map(function ($line){
-//                return Address::create_from_line($line);
-//            }, $lines);
-//        }catch (InvalidLineAddress $exception){
-//            die($exception->getMessage());
-//        }
-//        if($lines['min']->cep()==$cep){
-//            return $lines['min'];
-//        }
-//        elseif($lines['middle']->cep()==$cep){
-//            return $lines['middle'];
-//        }
-//        elseif($lines['max']->cep()==$cep){
-//            return $lines['max'];
-//        }
-//        elseif(($max-$min)<=1){
-//            return false;
-//        }
-//        elseif(
-//            (int) $lines['min']->cep()< (int) $cep &&
-//            (int) $lines['middle']->cep() > (int) $cep
-//        ){
-//            return $this->binarySearch($file,$cep,$line_size,$min+1,$middle-1);
-//        }
-//        else{
-//            return $this->binarySearch($file,$cep,$line_size,$middle+1,$max-1);
-//
-//        }
-//    }
+    private $consults=[
+
+    ];
+
+    /**
+     * @param array|null $consult
+     * @return AddressController|array
+     */
+    public function consults(array $consult=null)
+    {
+        if(!is_null($consult)) {
+            $this->consults[] = $consult;
+            return $this;
+        }else return $this->consults;
+    }
+
+    public function binarySearch(File $file,$cep, $line_size, $min, $max){
+        $middle=ceil(($max+$min)/2);
+        /** @var array <Address> $lines */
+        $lines=[
+            "min" => $file->read($line_size,($line_size*$min)),
+            "middle" => $file->read($line_size,($line_size*$middle)),
+            "max" => $file->read($line_size,($line_size*$max))
+        ];
+
+
+        try {
+            $lines=array_map(function ($line){
+                return Address::create_from_line($line);
+            }, $lines);
+        }catch (InvalidLineAddress $exception){
+            die($exception->getMessage());
+        }
+        $this->consults([
+            "min" => $min." (".$lines['min']->cep().")",
+            "middle" => $middle." (".$lines['middle']->cep().")",
+            "max" => $max." (".$lines['max']->cep().")"
+        ]);
+        if($lines['min']->cep()==$cep){
+            return $lines['min'];
+        }
+        elseif($lines['middle']->cep()==$cep){
+            return $lines['middle'];
+        }
+        elseif($lines['max']->cep()==$cep){
+            return $lines['max'];
+        }
+        elseif(($max-$min)<=1){
+            return false;
+        }
+        elseif(
+            (int) $lines['min']->cep()< (int) $cep &&
+            (int) $lines['middle']->cep() > (int) $cep
+        ){
+            return $this->binarySearch($file,$cep,$line_size,$min+1,$middle-1);
+        }
+        else{
+            return $this->binarySearch($file,$cep,$line_size,$middle+1,$max-1);
+
+        }
+    }
+
     private function swapArrayValues(array $array, $a,$b){
         echo "$a <-> $b \n";
         $c=$array[$a];
@@ -106,20 +127,7 @@ class AddressController
         }
         $output->close();
     }
-    private function binarySearch(File $file,$cep, $line_size, $min, $max){
-        $counter=0;
-        while($line = $file->read($line_size,($line_size*$counter))){
-            /** @var Address $address */
-            try {
-                $address = Address::create_from_line($line);
-            } catch (InvalidLineAddress $e) {
-                echo "ERROR ".$e->getCode()." - ".$e->getMessage().PHP_EOL;
-            }
-            if($address->cep() == $cep) return $address;
-            else $counter++;
-        }
-        return false;
-    }
+
     private function cepParseOnlyNumbers($cep){
         preg_match_all("/[0-9]+/",$cep,$cep_number_match,PREG_PATTERN_ORDER);
         $cep=implode("",array_unique($cep_number_match[0]));
@@ -152,8 +160,8 @@ class AddressController
         $file=new File();
         $file->open($file_path,"r");
         $address=$this->binarySearch($file,$cep,$line_size,$search_opts['min'],$search_opts['max']);
-        var_dump($address);
         $file->close();
+        return $address;
     }
     public function run(){
         if(php_sapi_name()=="cli"){
@@ -161,19 +169,46 @@ class AddressController
              * IF is console executed
              */
             if($GLOBALS['argc']<2) {
-                echo "ERRO 500 - CEP wasn't informed!\n";
-                exit(500);
+                echo "ERRO 401 - CEP wasn't informed!\n";
+                exit(401);
             }
             $cep=$GLOBALS['argv'][1];
             try {
-                $this->abstractProcedure($cep);
+                /** @var Address $address */
+                $address=$this->abstractProcedure($cep);
             }catch (InvalidCEPFormat $exception){
                 echo "ERRO ".$exception->getCode()." - ".$exception->getMessage()."\n";
                 exit($exception->getCode());
             }
+            if($address){
+                echo PHP_EOL;
+                foreach (config("address_template") as $config => $size){
+                    if($config!="blank_space") printf("%s: %.".$size."s\n",strtoupper($config),$address->$config());
+                }
+            }else{
+                echo "\n- CEP NÃO ENCONTRADO -\n";
+            }
         }
-//        $cep=$request->input("cep");
+        else {
+            header("Content-type: text/html; charset=utf-8");
 
-
+            if (!isset($_GET['cep'])) {
+                header("HTTP/1.1 401 CEP wasn't informed!");
+                echo "<h1>ERRO 401 - CEP wasn't informed!</h1>";
+                exit(500);
+            }
+            $cep = $_GET['cep'];
+            try {
+                /** @var Address $address */
+                $address = $this->abstractProcedure($cep);
+            } catch (InvalidCEPFormat $exception) {
+                header("HTTP/1.1 " . $exception->getCode() . " " . $exception->getMessage());
+                echo "<h1>ERRO " . $exception->getCode() . " - " . $exception->getMessage() . "</h1>";
+                exit($exception->getCode());
+            }
+            if ($address) header("HTTP/1.1 200 OK");
+            else header("HTTP/1.1 404 CEP NOT FOUND");
+            require "view/response.php";
+        }
     }
 }

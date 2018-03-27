@@ -9,6 +9,7 @@
 namespace CEPSearcher\Model;
 
 
+use CEPSearcher\Exception\InvalidCEPFormat;
 use CEPSearcher\Exception\InvalidLineAddress;
 
 class Address
@@ -155,5 +156,18 @@ class Address
         foreach ($address_template as $field => $length)
             $line.=$this->$field();
         return $line;
+    }
+
+    /**
+     * @param $cep
+     * @return string
+     * @throws InvalidCEPFormat
+     */
+    public static function cepHumanFormat($cep){
+        if(strlen($cep)=="8"){
+            return sprintf("%.5s-%.3s",substr($cep,0,5),substr($cep,5,3));
+        }else {
+            throw new InvalidCEPFormat();
+        }
     }
 }

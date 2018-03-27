@@ -1,7 +1,7 @@
-echo "-> CLONING REPOSITORY...\n" &&
+echo "-> CLONING REPOSITORY..." &&
 git clone https://github.com/jorgejr568/cep-binarysearch.git &&
-echo "-> ENTERING ON PROJECT DIRECTORY\n" &&
+echo "-> ENTERING ON PROJECT DIRECTORY" &&
 cd cep-binarysearch/ &&
-echo "-> UNZIPING CEP DAT FILE\n" &&
+echo "-> UNZIPING CEP DAT FILE" &&
 unzip -d ./app/data ./app/data/cep.zip &&
-echo "\n-> YOU'RE ALL SET UP!"
+echo "-> YOU'RE ALL SET UP!"

@@ -189,11 +189,26 @@ class AddressController
                 echo "\n- CEP NÃO ENCONTRADO -\n";
             }
         }
-        else{
+        else {
+            header("Content-type: text/html; charset=utf-8");
 
+            if (!isset($_GET['cep'])) {
+                header("HTTP/1.1 401 CEP wasn't informed!");
+                echo "<h1>ERRO 401 - CEP wasn't informed!</h1>";
+                exit(500);
+            }
+            $cep = $_GET['cep'];
+            try {
+                /** @var Address $address */
+                $address = $this->abstractProcedure($cep);
+            } catch (InvalidCEPFormat $exception) {
+                header("HTTP/1.1 " . $exception->getCode() . " " . $exception->getMessage());
+                echo "<h1>ERRO " . $exception->getCode() . " - " . $exception->getMessage() . "</h1>";
+                exit($exception->getCode());
+            }
+            if ($address) header("HTTP/1.1 200 OK");
+            else header("HTTP/1.1 404 CEP NOT FOUND");
+            require "view/response.php";
         }
-//        $cep=$request->input("cep");
-
-
     }
 }

@@ -7,12 +7,25 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>CEP SEARCHER</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
     <style type="text/css">
         .table-centered tbody tr td{
             text-align: center;
         }
         .table-centered thead tr th{
             text-align: center;
+        }
+        #arrayConsultsCollapse{
+            display: none;
+        }
+        #arrayConsultsCollapseAction{
+            -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-select: none; /* Safari */
+            -khtml-user-select: none; /* Konqueror HTML */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+            cursor: pointer;
         }
     </style>
 </head>
@@ -47,19 +60,21 @@
 
             <div class="row">
                 <div class="col-md-6 col-lg-6 col-lg-offset-3 col-md-offset-3 col-sm-12 col-sm-offset-0">
-                    <h4 class="text-success">Array consults (<?= count($this->consults());?>)</h4>
-                    <hr>
-                    <table class="table table-bordered table-hover table-centered">
-                        <thead>
-                        <tr>
-                            <th></th>
-                            <th>De</th>
-                            <th>Até</th>
-                            <th>Meio</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($this->consults() as $i => $consult):?>
+                    <h4 class="text-success" id="arrayConsultsCollapseAction"><i class="far fa-plus-square"></i> Array consults (<?= count($this->consults());?>)</h4>
+                    <div class="row" id="arrayConsultsCollapse">
+                        <div class="col-xs-12">
+                            <hr>
+                            <table class="table table-bordered table-hover table-centered">
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>De</th>
+                                    <th>Até</th>
+                                    <th>Meio</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php foreach ($this->consults() as $i => $consult):?>
 
                                     <tr>
                                         <td><b><?= ($i+1);?></b></td>
@@ -73,9 +88,11 @@
                                             <?= $consult['middle'];?>
                                         </td>
                                     </tr>
-                            <?php endforeach;?>
-                        </tbody>
-                    </table>
+                                <?php endforeach;?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         <?php else:?>
@@ -87,5 +104,17 @@
             </div>
         <?php endif;?>
     </div>
+
+    <script
+            src="https://code.jquery.com/jquery-3.3.1.js"
+            integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+            crossorigin="anonymous"></script>
+    <script>
+        $('#arrayConsultsCollapseAction').click(function(){
+            $i=$(this).find('i');
+            $i.toggleClass("fa-plus-square fa-minus-square");
+            $('#arrayConsultsCollapse').slideToggle(100);
+        });
+    </script>
 </body>
 </html>

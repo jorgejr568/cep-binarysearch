@@ -16,46 +16,60 @@ use CEPSearcher\Model\Address;
 
 class AddressController
 {
-//    public function binarySearch(File $file,$cep, $line_size, $min, $max){
-//
-//        $middle=ceil(($max+$min)/2);
-//        print_r(compact(['min','middle','max']));
-//        /** @var array <Address> $lines */
-//        $lines=[
-//            "min" => $file->read($line_size,($line_size*$min)),
-//            "middle" => $file->read($line_size,($line_size*$middle)),
-//            "max" => $file->read($line_size,($line_size*$max))
-//        ];
-//
-//        try {
-//            $lines=array_map(function ($line){
-//                return Address::create_from_line($line);
-//            }, $lines);
-//        }catch (InvalidLineAddress $exception){
-//            die($exception->getMessage());
+    public function binarySearch(File $file,$cep, $line_size, $min, $max){
+        $middle=ceil(($max+$min)/2);
+
+        /** @var array <Address> $lines */
+        $lines=[
+            "min" => $file->read($line_size,($line_size*$min)),
+            "middle" => $file->read($line_size,($line_size*$middle)),
+            "max" => $file->read($line_size,($line_size*$max))
+        ];
+
+        try {
+            $lines=array_map(function ($line){
+                return Address::create_from_line($line);
+            }, $lines);
+        }catch (InvalidLineAddress $exception){
+            die($exception->getMessage());
+        }
+        if($lines['min']->cep()==$cep){
+            return $lines['min'];
+        }
+        elseif($lines['middle']->cep()==$cep){
+            return $lines['middle'];
+        }
+        elseif($lines['max']->cep()==$cep){
+            return $lines['max'];
+        }
+        elseif(($max-$min)<=1){
+            return false;
+        }
+        elseif(
+            (int) $lines['min']->cep()< (int) $cep &&
+            (int) $lines['middle']->cep() > (int) $cep
+        ){
+            return $this->binarySearch($file,$cep,$line_size,$min+1,$middle-1);
+        }
+        else{
+            return $this->binarySearch($file,$cep,$line_size,$middle+1,$max-1);
+
+        }
+    }
+
+//    private function binarySearch(File $file,$cep, $line_size, $min, $max){
+//        $counter=0;
+//        while($line = $file->read($line_size,($line_size*$counter))){
+//            /** @var Address $address */
+//            try {
+//                $address = Address::create_from_line($line);
+//            } catch (InvalidLineAddress $e) {
+//                echo "ERROR ".$e->getCode()." - ".$e->getMessage().PHP_EOL;
+//            }
+//            if($address->cep() == $cep) return $address;
+//            else $counter++;
 //        }
-//        if($lines['min']->cep()==$cep){
-//            return $lines['min'];
-//        }
-//        elseif($lines['middle']->cep()==$cep){
-//            return $lines['middle'];
-//        }
-//        elseif($lines['max']->cep()==$cep){
-//            return $lines['max'];
-//        }
-//        elseif(($max-$min)<=1){
-//            return false;
-//        }
-//        elseif(
-//            (int) $lines['min']->cep()< (int) $cep &&
-//            (int) $lines['middle']->cep() > (int) $cep
-//        ){
-//            return $this->binarySearch($file,$cep,$line_size,$min+1,$middle-1);
-//        }
-//        else{
-//            return $this->binarySearch($file,$cep,$line_size,$middle+1,$max-1);
-//
-//        }
+//        return false;
 //    }
     private function swapArrayValues(array $array, $a,$b){
         echo "$a <-> $b \n";
@@ -106,20 +120,7 @@ class AddressController
         }
         $output->close();
     }
-    private function binarySearch(File $file,$cep, $line_size, $min, $max){
-        $counter=0;
-        while($line = $file->read($line_size,($line_size*$counter))){
-            /** @var Address $address */
-            try {
-                $address = Address::create_from_line($line);
-            } catch (InvalidLineAddress $e) {
-                echo "ERROR ".$e->getCode()." - ".$e->getMessage().PHP_EOL;
-            }
-            if($address->cep() == $cep) return $address;
-            else $counter++;
-        }
-        return false;
-    }
+
     private function cepParseOnlyNumbers($cep){
         preg_match_all("/[0-9]+/",$cep,$cep_number_match,PREG_PATTERN_ORDER);
         $cep=implode("",array_unique($cep_number_match[0]));
@@ -152,8 +153,8 @@ class AddressController
         $file=new File();
         $file->open($file_path,"r");
         $address=$this->binarySearch($file,$cep,$line_size,$search_opts['min'],$search_opts['max']);
-        var_dump($address);
         $file->close();
+        return $address;
     }
     public function run(){
         if(php_sapi_name()=="cli"){
@@ -166,11 +167,12 @@ class AddressController
             }
             $cep=$GLOBALS['argv'][1];
             try {
-                $this->abstractProcedure($cep);
+                $address=$this->abstractProcedure($cep);
             }catch (InvalidCEPFormat $exception){
                 echo "ERRO ".$exception->getCode()." - ".$exception->getMessage()."\n";
                 exit($exception->getCode());
             }
+
         }
 //        $cep=$request->input("cep");
 

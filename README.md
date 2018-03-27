@@ -12,7 +12,7 @@ unzip -d ./app/data ./app/data/cep.zip #Unziping cep data file
 
 ### Script
 ```bash
-wget https://raw.githubusercontent.com/jorgejr568/cep-binarysearch/master/install.sh -o ./install.sh 
+wget https://raw.githubusercontent.com/jorgejr568/cep-binarysearch/master/install.sh -O ./install.sh 
 sh install.sh
 ```
 

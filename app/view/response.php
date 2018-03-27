@@ -31,10 +31,13 @@
 </head>
 <body>
     <div class="container">
-        <?php use CEPSearcher\Model\Address;
-
+        <?php
+        use CEPSearcher\Model\Address;
         if($address):?>
-            <h1 class="text-success">Resultado para busca do CEP <?= Address::cepHumanFormat($address->cep());?></h1>
+            <?php
+                $cepFormated=Address::cepHumanFormat($address->cep());
+            ?>
+            <h1 class="text-success">Resultado para busca do CEP <?= $cepFormated;?></h1>
             <hr>
             <div class="row">
                 <div class="col-md-6 col-lg-6 col-lg-offset-3 col-md-offset-3 col-sm-12 col-sm-offset-0">
@@ -76,18 +79,27 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+                                <?php
+                                    if(!function_exists("cepArrayConsultsCheckFind")){
+                                        function cepArrayConsultsCheckFind($consult,$cepFormated){
+                                            if(strpos($consult,$cepFormated)!==FALSE){
+                                                return str_replace($cepFormated,"<b class='text-success'>".$cepFormated."</b>",$consult);
+                                            }else return $consult;
+                                        }
+                                    }
+                                ?>
                                 <?php foreach ($this->consults() as $i => $consult):?>
 
                                     <tr>
                                         <td><b><?= ($i+1);?></b></td>
                                         <td>
-                                            <?= $consult['min'];?>
+                                            <?= cepArrayConsultsCheckFind($consult['min'],$cepFormated);?>
                                         </td>
                                         <td>
-                                            <?= $consult['max'];?>
+                                            <?= cepArrayConsultsCheckFind($consult['max'],$cepFormated);?>
                                         </td>
                                         <td>
-                                            <?= $consult['middle'];?>
+                                            <?= cepArrayConsultsCheckFind($consult['middle'],$cepFormated);?>
                                         </td>
                                     </tr>
                                 <?php endforeach;?>

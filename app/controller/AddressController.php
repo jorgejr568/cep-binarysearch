@@ -50,9 +50,9 @@ class AddressController
             die($exception->getMessage());
         }
         $this->consults([
-            "min" => $min." (".$lines['min']->cep().")",
-            "middle" => $middle." (".$lines['middle']->cep().")",
-            "max" => $max." (".$lines['max']->cep().")"
+            "min" => $min." (".Address::cepHumanFormat($lines['min']->cep()).")",
+            "middle" => $middle." (".Address::cepHumanFormat($lines['middle']->cep()).")",
+            "max" => $max." (".Address::cepHumanFormat($lines['max']->cep()).")"
         ]);
         if($lines['min']->cep()==$cep){
             return $lines['min'];

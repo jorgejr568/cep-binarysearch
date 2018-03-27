@@ -16,15 +16,31 @@ use CEPSearcher\Model\Address;
 
 class AddressController
 {
+    private $consults=[
+
+    ];
+
+    /**
+     * @param array|null $consult
+     * @return AddressController|array
+     */
+    public function consults(array $consult=null)
+    {
+        if(!is_null($consult)) {
+            $this->consults[] = $consult;
+            return $this;
+        }else return $this->consults;
+    }
+
     public function binarySearch(File $file,$cep, $line_size, $min, $max){
         $middle=ceil(($max+$min)/2);
-
         /** @var array <Address> $lines */
         $lines=[
             "min" => $file->read($line_size,($line_size*$min)),
             "middle" => $file->read($line_size,($line_size*$middle)),
             "max" => $file->read($line_size,($line_size*$max))
         ];
+
 
         try {
             $lines=array_map(function ($line){
@@ -33,6 +49,11 @@ class AddressController
         }catch (InvalidLineAddress $exception){
             die($exception->getMessage());
         }
+        $this->consults([
+            "min" => $min." (".$lines['min']->cep().")",
+            "middle" => $middle." (".$lines['middle']->cep().")",
+            "max" => $max." (".$lines['max']->cep().")"
+        ]);
         if($lines['min']->cep()==$cep){
             return $lines['min'];
         }
@@ -57,20 +78,6 @@ class AddressController
         }
     }
 
-//    private function binarySearch(File $file,$cep, $line_size, $min, $max){
-//        $counter=0;
-//        while($line = $file->read($line_size,($line_size*$counter))){
-//            /** @var Address $address */
-//            try {
-//                $address = Address::create_from_line($line);
-//            } catch (InvalidLineAddress $e) {
-//                echo "ERROR ".$e->getCode()." - ".$e->getMessage().PHP_EOL;
-//            }
-//            if($address->cep() == $cep) return $address;
-//            else $counter++;
-//        }
-//        return false;
-//    }
     private function swapArrayValues(array $array, $a,$b){
         echo "$a <-> $b \n";
         $c=$array[$a];
@@ -162,16 +169,27 @@ class AddressController
              * IF is console executed
              */
             if($GLOBALS['argc']<2) {
-                echo "ERRO 500 - CEP wasn't informed!\n";
-                exit(500);
+                echo "ERRO 401 - CEP wasn't informed!\n";
+                exit(401);
             }
             $cep=$GLOBALS['argv'][1];
             try {
+                /** @var Address $address */
                 $address=$this->abstractProcedure($cep);
             }catch (InvalidCEPFormat $exception){
                 echo "ERRO ".$exception->getCode()." - ".$exception->getMessage()."\n";
                 exit($exception->getCode());
             }
+            if($address){
+                echo PHP_EOL;
+                foreach (config("address_template") as $config => $size){
+                    if($config!="blank_space") printf("%s: %.".$size."s\n",strtoupper($config),$address->$config());
+                }
+            }else{
+                echo "\n- CEP NÃO ENCONTRADO -\n";
+            }
+        }
+        else{
 
         }
 //        $cep=$request->input("cep");

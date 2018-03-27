@@ -31,8 +31,10 @@
 </head>
 <body>
     <div class="container">
-        <?php if($address):?>
-            <h1 class="text-success">Resultado para busca do CEP <?= $address->cep();?></h1>
+        <?php use CEPSearcher\Model\Address;
+
+        if($address):?>
+            <h1 class="text-success">Resultado para busca do CEP <?= Address::cepHumanFormat($address->cep());?></h1>
             <hr>
             <div class="row">
                 <div class="col-md-6 col-lg-6 col-lg-offset-3 col-md-offset-3 col-sm-12 col-sm-offset-0">

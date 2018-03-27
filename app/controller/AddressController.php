@@ -78,13 +78,6 @@ class AddressController
         }
     }
 
-    private function swapArrayValues(array $array, $a,$b){
-        echo "$a <-> $b \n";
-        $c=$array[$a];
-        $array[$a]=$array[$b];
-        $array[$b]=$c;
-        unset($c);
-    }
     private function cepOrder(){
         $file_path="data/cep.dat";
         $output_path="data/cep-ordered.dat";
@@ -137,6 +130,7 @@ class AddressController
 
     /**
      * @param $cep
+     * @return bool
      * @throws InvalidCEPFormat
      */
     private function abstractProcedure($cep){

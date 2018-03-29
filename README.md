@@ -25,15 +25,15 @@ wget https://raw.githubusercontent.com/jorgejr568/cep-binarysearch/master/instal
 
 sh install.sh
 # RUNNING INSTALL SCRIPT
+
+cd cep-binarysearch 
+# ENTERING ON PROJECT DIRECTORY 
 ```
 
 ### Serving (Optional)
 
 On application root, paste this on console
 ```bash
-cd cep-binarysearch 
-# ENTERING ON PROJECT DIRECTORY 
-
 php -S 0.0.0.0:8888 &
 # SERVING APPLICATION ON 0.0.0.0:8888
 ```

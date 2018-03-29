@@ -11,7 +11,7 @@ git clone git@github.com:jorgejr568/cep-binarysearch.git
 cd cep-binarysearch/ 
 # ENTERING ON DIRECTORY
 
-unzip -d ./app/data ./app/data/cep.zip #Unziping cep data file
+unzip -d ./app/data ./app/data/cep.zip
 # UNZIPING DAT FILES
 
 cd ../..

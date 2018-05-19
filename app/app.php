@@ -11,7 +11,6 @@ class App{
         "exception" => "*",
         "model" => "*",
         "engine" => "*",
-        "fn" => "*",
         "controller" => "*",
     ];
 

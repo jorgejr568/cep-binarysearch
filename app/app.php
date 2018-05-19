@@ -14,19 +14,8 @@ class App{
         "fn" => "*",
         "controller" => "*",
     ];
-    private function require_dir($dir_path){
-        rtrim($dir_path,"/");
-        $dir_files=scandir($dir_path);
-        foreach ($dir_files as $dir_item){
-            if(!in_array($dir_item,[".",".."])) {
-                $dir_item_full_path = $dir_path . DIRECTORY_SEPARATOR . $dir_item;
-                if (is_dir($dir_item_full_path)) {
-                    $this->require_dir($dir_item_full_path);
-                } else require_once $dir_item_full_path;
-            }
-        }
-    }
-    public function run(){
+
+    public function __construct(){
         chdir(dirname(__FILE__));
 
         foreach($this->structure as $dir => $structure_types_ordered) {
@@ -41,6 +30,21 @@ class App{
                         . ".php";
             }
         }
+    }
+
+    private function require_dir($dir_path){
+        rtrim($dir_path,"/");
+        $dir_files=scandir($dir_path);
+        foreach ($dir_files as $dir_item){
+            if(!in_array($dir_item,[".",".."])) {
+                $dir_item_full_path = $dir_path . DIRECTORY_SEPARATOR . $dir_item;
+                if (is_dir($dir_item_full_path)) {
+                    $this->require_dir($dir_item_full_path);
+                } else require_once $dir_item_full_path;
+            }
+        }
+    }
+    public function cepExercise(){
         $addressController=new AddressController();
         $addressController->run();
     }

@@ -20,7 +20,7 @@ class File
      */
     public function open($path, $mode){
         if(!$this->stream=fopen($path,$mode)){
-            printf("ERRO 500 - CEP DAT FILE WASN'T FOUND!\n");
+            printf("ERRO 500 - FILE COULDN'T BE OPENED!\n");
             exit(500);
         }
         return $this;

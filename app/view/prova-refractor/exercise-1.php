@@ -35,12 +35,16 @@
                             </thead>
                             <tbody>
                             <?php
-                            $offset=0;
-
-                            while ($dummy_line = $dummy_dat->read($dummy_line_size,$offset)):?>
+                            /** @var \CEPSearcher\Engine\File\File $dummy_dat */
+                            $dummy_dat->seek(0);
+                            while ($dummy_line = $dummy_dat->r($dummy_line_size)):?>
                                 <?php if($dummy_dat->eof()) break;
                                 /** @var ProvaDummy $Dummy */
-                                $Dummy= ProvaDummy::create_from_line($dummy_line);
+                                try {
+                                    $Dummy = ProvaDummy::create_from_line($dummy_line);
+                                } catch (\CEPSearcher\Exception\InvalidLineProvaDummy $e) {
+                                    die("ERROR - Dummy data line invalid size");
+                                }
                                 ?>
                                 <tr>
                                     <?php foreach ($dummy_template as $field => $size):?>
@@ -69,12 +73,15 @@
                             </thead>
                             <tbody>
                             <?php
-                            $offset=0;
-
-                            while ($dummy_line = $dummy_reverse->read($dummy_line_size,$offset)):?>
+                            $dummy_reverse->seek(0);
+                            while ($dummy_line = $dummy_reverse->r($dummy_line_size)):?>
                                 <?php if($dummy_reverse->eof()) break;
                                 /** @var ProvaDummy $Dummy */
-                                $Dummy= ProvaDummy::create_from_line($dummy_line);
+                                try {
+                                    $Dummy = ProvaDummy::create_from_line($dummy_line);
+                                } catch (\CEPSearcher\Exception\InvalidLineProvaDummy $e) {
+                                    die("ERROR - Dummy data line invalid size");
+                                }
                                 ?>
                                 <tr>
                                     <?php foreach ($dummy_template as $field => $size):?>

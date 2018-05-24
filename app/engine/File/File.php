@@ -33,6 +33,9 @@ class File
         return fread($this->stream,$bytes);
     }
 
+    public function r($bytes){
+        return fread($this->stream,$bytes);
+    }
     public function rewind(){
         rewind($this->stream);
         return $this;

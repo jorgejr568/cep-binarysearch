@@ -2,6 +2,7 @@
 namespace CEPSearcher;
 
 use CEPSearcher\Controller\AddressController;
+use CEPSearcher\Controller\ProvaRefractorController;
 
 class App{
     private $structure=[
@@ -47,6 +48,24 @@ class App{
         $addressController=new AddressController();
         $addressController->run();
     }
+    public function provaRefractor($exercise){
+        $ProvaRefractorController=new ProvaRefractorController();
+        switch ($exercise){
+            case 1:
+                $ProvaRefractorController->exercise1();
+                break;
+            case 2:
+                $ProvaRefractorController->exercise2();
+                break;
+            case 3:
+                $ProvaRefractorController->exercise3();
+                break;
+            default:
+                header("HTTP/1.0 404 Not Found");
+                die();
+        }
+    }
+
 }
 
 return new App();

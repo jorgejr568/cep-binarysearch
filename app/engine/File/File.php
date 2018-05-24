@@ -54,4 +54,8 @@ class File
 
         fwrite($this->stream,$content,$length);
     }
+
+    public function eof(){
+        return feof($this->stream);
+    }
 }

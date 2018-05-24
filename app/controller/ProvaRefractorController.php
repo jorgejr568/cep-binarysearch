@@ -48,7 +48,7 @@ class ProvaRefractorController extends Controller
 
         $this->processExercise1($dummy_dat,$dummy_reverse);
 
-        require_once "view/exercise-1.php";
+        require_once "view/prova-refractor/exercise-1.php";
 
         $dummy_dat->close();
         $dummy_reverse->close();

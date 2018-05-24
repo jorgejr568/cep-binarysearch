@@ -202,7 +202,7 @@ class AddressController
             }
             if ($address) header("HTTP/1.1 200 OK");
             else header("HTTP/1.1 404 CEP NOT FOUND");
-            require "view/response.php";
+            require "view/cep-response.php";
         }
     }
 }

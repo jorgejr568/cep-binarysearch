@@ -2,10 +2,12 @@
 /*
  * Function to return config data
  */
-function config($config,$default=null){
-    return isset($GLOBALS['APP_CONFIG'][$config]) ?  $GLOBALS['APP_CONFIG'][$config] : $default;
-}
 
+if(!function_exists("config")){
+    function config($config,$default=null){
+        return isset($GLOBALS['APP_CONFIG'][$config]) ?  $GLOBALS['APP_CONFIG'][$config] : $default;
+    }
+}
 /*
  * LOAD CONFIG FILES EXCEPT app.php
  */

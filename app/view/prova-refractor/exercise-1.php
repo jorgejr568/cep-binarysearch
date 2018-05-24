@@ -37,23 +37,25 @@
                             <?php
                             /** @var \CEPSearcher\Engine\File\File $dummy_dat */
                             $dummy_dat->seek(0);
-                            while ($dummy_line = $dummy_dat->r($dummy_line_size)):?>
-                                <?php if($dummy_dat->eof()) break;
-                                /** @var ProvaDummy $Dummy */
-                                try {
-                                    $Dummy = ProvaDummy::create_from_line($dummy_line);
-                                } catch (\CEPSearcher\Exception\InvalidLineProvaDummy $e) {
-                                    die("ERROR - Dummy data line invalid size");
-                                }
-                                ?>
-                                <tr>
-                                    <?php foreach ($dummy_template as $field => $size):?>
-                                        <?php if($field!="blank"):?>
-                                            <td><?= $Dummy->{"get".ucfirst(strtolower($field))}()?></td>
-                                        <?php endif;?>
-                                    <?php endforeach;?>
-                                </tr>
-                            <?php endwhile;?>
+                            while (true):?>
+                                <?php
+                                    $dummy_line = $dummy_dat->r($dummy_line_size);
+                                    if($dummy_dat->eof()) break;
+                                    /** @var ProvaDummy $Dummy */
+                                    try {
+                                        $Dummy = ProvaDummy::create_from_line($dummy_line);
+                                    } catch (\CEPSearcher\Exception\InvalidLineProvaDummy $e) {
+                                        die("ERROR - Dummy data line invalid size");
+                                    }
+                                    ?>
+                                    <tr>
+                                        <?php foreach ($dummy_template as $field => $size):?>
+                                            <?php if($field!="blank"):?>
+                                                <td><?= $Dummy->{"get".ucfirst(strtolower($field))}()?></td>
+                                            <?php endif;?>
+                                        <?php endforeach;?>
+                                    </tr>
+                                <?php endwhile;?>
                             </tbody>
                         </table>
                     </div>
@@ -74,22 +76,24 @@
                             <tbody>
                             <?php
                             $dummy_reverse->seek(0);
-                            while ($dummy_line = $dummy_reverse->r($dummy_line_size)):?>
-                                <?php if($dummy_reverse->eof()) break;
-                                /** @var ProvaDummy $Dummy */
-                                try {
-                                    $Dummy = ProvaDummy::create_from_line($dummy_line);
-                                } catch (\CEPSearcher\Exception\InvalidLineProvaDummy $e) {
-                                    die("ERROR - Dummy data line invalid size");
-                                }
-                                ?>
-                                <tr>
-                                    <?php foreach ($dummy_template as $field => $size):?>
-                                        <?php if($field!="blank"):?>
-                                            <td><?= $Dummy->{"get".ucfirst(strtolower($field))}()?></td>
-                                        <?php endif;?>
-                                    <?php endforeach;?>
-                                </tr>
+                            while (true):?>
+                                <?php
+                                    $dummy_line = $dummy_reverse->r($dummy_line_size);
+                                    if($dummy_reverse->eof()) break;
+                                    /** @var ProvaDummy $Dummy */
+                                    try {
+                                        $Dummy = ProvaDummy::create_from_line($dummy_line);
+                                    } catch (\CEPSearcher\Exception\InvalidLineProvaDummy $e) {
+                                        die("ERROR - Dummy data line invalid size");
+                                    }
+                                    ?>
+                                    <tr>
+                                        <?php foreach ($dummy_template as $field => $size):?>
+                                            <?php if($field!="blank"):?>
+                                                <td><?= $Dummy->{"get".ucfirst(strtolower($field))}()?></td>
+                                            <?php endif;?>
+                                        <?php endforeach;?>
+                                    </tr>
                             <?php endwhile;?>
                             </tbody>
                         </table>

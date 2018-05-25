@@ -158,7 +158,7 @@ class ProvaDummy
         $offset=0;
         $Dummy=new ProvaDummy();
         foreach ($prova_dummy_template as $target => $size) {
-            if ($target != "_blank") $Dummy->{"set".ucfirst(strtolower($target))}(substr($line,$offset,$size));
+            if ($target != "blank") $Dummy->{"set".ucfirst(strtolower($target))}(substr($line,$offset,$size));
             else break;
             $offset+=$size;
         }
@@ -168,8 +168,10 @@ class ProvaDummy
     public function toLine(){
         $line="";
         $prova_dummy_template=config("prova_dummy_template");
-        foreach ($prova_dummy_template as $field => $length)
-            $line.=$this->{"get".ucfirst(strtolower($field))}();
+        foreach ($prova_dummy_template as $field => $length) {
+            if ($field != "_blank") $line .= str_pad($this->{"get" . ucfirst(strtolower($field))}(),$length," ");
+            else break;
+        }
         return $line;
     }
 }

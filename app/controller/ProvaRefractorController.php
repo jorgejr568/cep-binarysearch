@@ -28,6 +28,7 @@ class ProvaRefractorController extends Controller
 
 
         while($last_item_pos >= 0){
+
             $dummy_reverse->write(
                 $dummy_dat->read($dummy_line_size,$last_item_pos),
                 NULL,
@@ -47,6 +48,9 @@ class ProvaRefractorController extends Controller
         $dummy_reverse->open($this->dummy_reverse_path,"w+");
 
         $this->processExercise1($dummy_dat,$dummy_reverse);
+
+        $dummy_reverse->close();
+        $dummy_reverse->open($this->dummy_reverse_path,"r");
 
         require_once "view/prova-refractor/exercise-1.php";
 

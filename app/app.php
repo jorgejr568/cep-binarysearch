@@ -65,7 +65,10 @@ class App{
                 die();
         }
     }
-
+    public function index(){
+        $applications=config("applications");
+        require "view/index.php";
+    }
 }
 
 return new App();

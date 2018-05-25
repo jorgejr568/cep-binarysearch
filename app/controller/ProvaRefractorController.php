@@ -85,7 +85,10 @@ class ProvaRefractorController extends Controller
         $dummy_file->close();
         return $extensions;
     }
+    private function websiteEndsWith($website,$end){
+        return (substr($website,strlen($end)*-1)==$end);
 
+    }
     public function exercise2(){
         $dummy_template=config("prova_dummy_template");
         $dummy_size=array_sum($dummy_template);
@@ -93,8 +96,7 @@ class ProvaRefractorController extends Controller
             $dummy_file=File::create($this->dummy_path,"r");
             $dummy_filtered=File::create($this->dummy_websites_filtered_path,"w+");
 
-            $endCheck=trim($_POST['extension']);
-            $endCheckLen=strlen($endCheck);
+            $end=trim($_POST['extension']);
 
 
             while(true){
@@ -106,7 +108,7 @@ class ProvaRefractorController extends Controller
                     die($e->getMessage());
                 }
                 $website=trim($Dummy->getWebsite());
-                if(substr($website,$endCheckLen*-1)==$endCheck)  $dummy_filtered->write($dummy_line,null,$dummy_size);
+                if($this->websiteEndsWith($website,$end))  $dummy_filtered->write($dummy_line,null,$dummy_size);
             }
             $dummy_file->close();
             $dummy_filtered->close()->open($this->dummy_websites_filtered_path,"r")->seek(0);

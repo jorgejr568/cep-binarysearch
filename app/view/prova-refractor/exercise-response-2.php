@@ -19,7 +19,7 @@ use CEPSearcher\Model\ProvaDummy;
     <hr>
     <div class="row">
         <div class="col-md-10 col-lg-10 col-sm-12 col-md-offset-1 col-sm-offset-0 col-lg-offset-1">
-            <h2 class="text-primary text-center">Exercicio 2 - Filtro <?= $endCheck;?></h2>
+            <h2 class="text-primary text-center">Exercicio 2 - Filtro <?= $end;?></h2>
             <hr>
             <div class="row">
                 <div class="col-xs-12 table-responsive">

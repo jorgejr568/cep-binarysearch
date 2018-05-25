@@ -12,7 +12,10 @@ class App{
         "exception" => "*",
         "model" => "*",
         "engine" => "*",
-        "controller" => "*",
+        "controller" => [
+            "Controller",
+            "*"
+        ],
     ];
 
     public function __construct(){
@@ -22,7 +25,8 @@ class App{
             if ($structure_types_ordered == "*") $this->require_dir($dir);
             else {
                 foreach ($structure_types_ordered as $file_to_be_required)
-                    require_once __DIR__
+                    if($file_to_be_required == "*") $this->require_dir($dir);
+                    else require_once __DIR__
                         . DIRECTORY_SEPARATOR
                         . $dir
                         . DIRECTORY_SEPARATOR

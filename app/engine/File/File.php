@@ -61,4 +61,9 @@ class File
     public function eof(){
         return feof($this->stream);
     }
+    public static function create($path, $mode){
+        $File=new File();
+        $File->open($path,$mode);
+        return $File;
+    }
 }

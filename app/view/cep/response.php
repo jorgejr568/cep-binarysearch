@@ -117,6 +117,7 @@
                 </div>
             </div>
         <?php endif;?>
+        <a href="cep.php" class="btn btn-danger pull-right">VOLTAR</a>
     </div>
 
     <script

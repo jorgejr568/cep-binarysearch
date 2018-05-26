@@ -14,7 +14,7 @@ use CEPSearcher\Exception\InvalidCEPFormat;
 use CEPSearcher\Exception\InvalidLineAddress;
 use CEPSearcher\Model\Address;
 
-class AddressController
+class AddressController extends Controller
 {
     private $consults=[
 
@@ -184,25 +184,31 @@ class AddressController
             }
         }
         else {
-            header("Content-type: text/html; charset=utf-8");
+            if($this->isPost()) {
 
-            if (!isset($_GET['cep'])) {
-                header("HTTP/1.1 401 CEP wasn't informed!");
-                echo "<h1>ERRO 401 - CEP wasn't informed!</h1>";
-                exit(500);
+                header("Content-type: text/html; charset=utf-8");
+
+                if (!isset($_POST['cep'])) {
+                    header("HTTP/1.1 401 CEP wasn't informed!");
+                    echo "<h1>ERRO 401 - CEP wasn't informed!</h1>";
+                    exit(500);
+                }
+                $cep = $_POST['cep'];
+                try {
+                    /** @var Address $address */
+                    $address = $this->abstractProcedure($cep);
+                } catch (InvalidCEPFormat $exception) {
+                    header("HTTP/1.1 " . $exception->getCode() . " " . $exception->getMessage());
+                    echo "<h1>ERRO " . $exception->getCode() . " - " . $exception->getMessage() . "</h1>";
+                    exit($exception->getCode());
+                }
+                if ($address) header("HTTP/1.1 200 OK");
+                else header("HTTP/1.1 404 CEP NOT FOUND");
+                require "view/cep/response.php";
             }
-            $cep = $_GET['cep'];
-            try {
-                /** @var Address $address */
-                $address = $this->abstractProcedure($cep);
-            } catch (InvalidCEPFormat $exception) {
-                header("HTTP/1.1 " . $exception->getCode() . " " . $exception->getMessage());
-                echo "<h1>ERRO " . $exception->getCode() . " - " . $exception->getMessage() . "</h1>";
-                exit($exception->getCode());
+            else{
+                require "view/cep/index.php";
             }
-            if ($address) header("HTTP/1.1 200 OK");
-            else header("HTTP/1.1 404 CEP NOT FOUND");
-            require "view/response.php";
         }
     }
 }

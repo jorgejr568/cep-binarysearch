@@ -5,10 +5,10 @@
 On console, go to the folder that you want to install
 ### Manual
 ```bash
-git clone git@github.com:jorgejr568/cep-binarysearch.git 
+git clone git@github.com:jorgejr568/file-structure-organization-algorithms.git 
 # CLONING PROJECT
 
-cd cep-binarysearch/ 
+cd file-structure-organization-algorithms/ 
 # ENTERING ON DIRECTORY
 
 unzip -d ./app/data ./app/data/cep.zip
@@ -20,13 +20,13 @@ cd ../..
 
 ### Script
 ```bash
-wget https://raw.githubusercontent.com/jorgejr568/cep-binarysearch/master/install.sh -O ./install.sh
+wget https://raw.githubusercontent.com/jorgejr568/file-structure-organization-algorithms/master/install.sh -O ./install.sh
 # GETTING INSTALL SCRIPT
 
 sh install.sh
 # RUNNING INSTALL SCRIPT
 
-cd cep-binarysearch 
+cd file-structure-organization-algorithms 
 # ENTERING ON PROJECT DIRECTORY 
 ```
 

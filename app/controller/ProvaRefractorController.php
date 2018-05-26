@@ -18,12 +18,10 @@ class ProvaRefractorController extends Controller
     private $dummy_path="data/prova-dummy.dat";
     private $dummy_reverse_path="data/prova-dummy-reverse.dat";
     private $dummy_websites_filtered_path="data/prova-dummy-website.dat";
+    private $dummy_disordered_path="data/prova-dummy-desordered.dat";
+    private $dummy_merge_path="data/prova-dummy-merge.dat";
     private $view_path="view/prova-refractor";
 
-    public function __construct()
-    {
-
-    }
 
     private function processExercise1(File $dummy_dat,File $dummy_reverse){
         $dummy_template=config("prova_dummy_template");
@@ -119,7 +117,45 @@ class ProvaRefractorController extends Controller
         }
     }
 
+    private function searchOnOrdered(File $file,$register_size,$id,$min,$max){
+        $middle=ceil(($min+$max)/2);
+        try {
+            $Dummy = ProvaDummy::create_from_line($file->read($register_size,$middle*$register_size));
+        } catch (InvalidLineProvaDummy $e) {
+            die($e->getMessage());
+        }
+        $register_id=(int) $Dummy->getId();
+        if($register_id==$id) return true;
+        elseif($min==$max) return false;
+        elseif($id<$register_id) return $this->searchOnOrdered($file,$register_size,$id,$min,$middle-1);
+        else return $this->searchOnOrdered($file,$register_size,$id,$middle+1,$max);
+    }
+
     public function exercise3(){
+        $dummy_template=config("prova_dummy_template");
+
+
+        $file_ordered=File::create($this->dummy_path,"r");
+        $file_disordered=File::create($this->dummy_disordered_path,"r")->seek(0);
+
+        $dummy_size=array_sum($dummy_template);
+        $dummy_ordered_register_count=filesize($this->dummy_path)/$dummy_size;
+        $file_merged=File::create($this->dummy_merge_path,"w+");
+        while(true){
+            $dummy_line=$file_disordered->r($dummy_size);
+            if($file_disordered->eof()) break;
+            try {
+                $register_id = (int)ProvaDummy::create_from_line($dummy_line)->getId();
+            } catch (InvalidLineProvaDummy $e) {
+                die(var_dump($e->getMessage()));
+            }
+            if($this->searchOnOrdered($file_ordered,$dummy_size,$register_id,0,$dummy_ordered_register_count-1)) $file_merged->write($dummy_line,NULL,$dummy_size);
+        }
+        $file_merged->close()->open($this->dummy_merge_path,"r");
+        require $this->view_path."/exercise-3.php";
+        $file_disordered->close();
+        $file_ordered->close();
+        $file_merged->close();
 
     }
 }

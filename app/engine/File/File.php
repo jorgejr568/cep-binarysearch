@@ -20,7 +20,7 @@ class File
      */
     public function open($path, $mode){
         if(!$this->stream=fopen($path,$mode)){
-            printf("ERRO 500 - CEP DAT FILE WASN'T FOUND!\n");
+            printf("ERRO 500 - FILE COULDN'T BE OPENED!\n");
             exit(500);
         }
         return $this;
@@ -33,6 +33,9 @@ class File
         return fread($this->stream,$bytes);
     }
 
+    public function r($bytes){
+        return fread($this->stream,$bytes);
+    }
     public function rewind(){
         rewind($this->stream);
         return $this;
@@ -53,5 +56,14 @@ class File
         elseif($offset>0) $this->seek($offset);
 
         fwrite($this->stream,$content,$length);
+    }
+
+    public function eof(){
+        return feof($this->stream);
+    }
+    public static function create($path, $mode){
+        $File=new File();
+        $File->open($path,$mode);
+        return $File;
     }
 }

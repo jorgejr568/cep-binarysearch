@@ -1,7 +1,7 @@
 echo "-> CLONING REPOSITORY..." &&
-git clone https://github.com/jorgejr568/cep-binarysearch.git &&
+git clone https://github.com/jorgejr568/file-structure-organization-algorithms.git &&
 echo "-> ENTERING ON PROJECT DIRECTORY" &&
-cd cep-binarysearch/ &&
+cd file-structure-organization-algorithms/ &&
 echo "-> UNZIPING CEP DAT FILE" &&
 unzip -d ./app/data ./app/data/cep.zip &&
 echo "-> REMOVING INSTALL SCRIPT" &&

@@ -96,7 +96,6 @@ class ProvaRefractorController extends Controller
 
             $end=trim($_POST['extension']);
 
-
             while(true){
                 $dummy_line=$dummy_file->r($dummy_size);
                 if($dummy_file->eof()) break;
@@ -108,9 +107,13 @@ class ProvaRefractorController extends Controller
                 $website=trim($Dummy->getWebsite());
                 if($this->websiteEndsWith($website,$end))  $dummy_filtered->write($dummy_line,null,$dummy_size);
             }
+
             $dummy_file->close();
             $dummy_filtered->close()->open($this->dummy_websites_filtered_path,"r")->seek(0);
+
             require $this->view_path."/exercise-response-2.php";
+
+            $dummy_filtered->close();
         }else{
             $extensions=$this->listDummyExtensions();
             require $this->view_path."/exercise-2.php";

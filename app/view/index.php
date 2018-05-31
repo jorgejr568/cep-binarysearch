@@ -62,7 +62,7 @@
         <div class="nav-wrapper grey darken-3">
             <a href="#" class="brand-logo center">Organização de estruturas de arquivos</a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a target="_blank" href="https://github.com/jorgejr568/cep-binarysearch">GitHub</a></li>
+                <li><a target="_blank" href="https://github.com/jorgejr568/file-structure-organization-algorithms">GitHub</a></li>
                 <li><a target="_blank" href="https://github.com/jorgejr568">Jorge Junior</a></li>
             </ul>
         </div>

@@ -53,9 +53,13 @@ class ProvaRefractorController extends Controller
         $this->processExercise1($dummy_dat,$dummy_reverse);
 
         $dummy_reverse->close()->open($this->dummy_reverse_path,"r");
-
-        require_once $this->view_path."/exercise-1.php";
-
+        $View = new View();
+        $View
+            ->setView($this->view_path.".exercise-1")
+            ->setVariable(
+                compact(['dummy_dat',"dummy_reverse","dummy_line_size","dummy_template"])
+            )
+            ->run();
         $dummy_dat->close();
         $dummy_reverse->close();
     }
@@ -89,6 +93,7 @@ class ProvaRefractorController extends Controller
 
     }
     public function exercise2(){
+        $View = new View();
         $dummy_template=config("prova_dummy_template");
         $dummy_size=array_sum($dummy_template);
         if($this->isPost()){
@@ -112,11 +117,21 @@ class ProvaRefractorController extends Controller
             $dummy_file->close();
             $dummy_filtered->close()->open($this->dummy_websites_filtered_path,"r")->seek(0);
 
-            require $this->view_path."/exercise-response-2.php";
+            $View
+                ->setView($this->view_path.".exercise-response-2")
+                ->setVariable(compact([
+                    "dummy_filtered","dummy_size","dummy_template"
+                ]))
+                ->run();
 
             $dummy_filtered->close();
         }else{
-            $extensions=$this->listDummyExtensions();
+            $View
+                ->setView($this->view_path.".exercise-2")
+                ->setVariable([
+                    "extensions" => $this->listDummyExtensions()
+                ])
+                ->run();
             require $this->view_path."/exercise-2.php";
         }
     }

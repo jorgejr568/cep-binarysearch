@@ -29,7 +29,7 @@ class View
      * @param $value
      * @return $this
      */
-    public function setVariable($data = [], $value){
+    public function setVariable($data = [], $value = null){
         if(is_array($data)){
             /** @var array $data */
             foreach ($data as $variable_name => $variable_value)

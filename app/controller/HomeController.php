@@ -9,7 +9,15 @@
 namespace CEPSearcher\Controller;
 
 
-class HomeController
-{
+use CEPSearcher\Engine\View\View;
 
+class HomeController extends Controller
+{
+    public function index(){
+        $View = new View();
+        $View
+            ->setView("index")
+            ->setVariable("applications" , config("applications"))
+            ->run();
+        }
 }

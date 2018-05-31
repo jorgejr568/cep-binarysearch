@@ -10,6 +10,7 @@ namespace CEPSearcher\Controller;
 
 
 use CEPSearcher\Engine\File\File;
+use CEPSearcher\Engine\View\View;
 use CEPSearcher\Exception\InvalidCEPFormat;
 use CEPSearcher\Exception\InvalidLineAddress;
 use CEPSearcher\Model\Address;
@@ -184,6 +185,7 @@ class AddressController extends Controller
             }
         }
         else {
+            $View = new View();
             if($this->isPost()) {
 
                 header("Content-type: text/html; charset=utf-8");
@@ -204,10 +206,18 @@ class AddressController extends Controller
                 }
                 if ($address) header("HTTP/1.1 200 OK");
                 else header("HTTP/1.1 404 CEP NOT FOUND");
-                require "view/cep/response.php";
+                $View
+                    ->setView("cep.response")
+                    ->setVariable([
+                        "address" => $address,
+                        "consults" => $this->consults
+                    ])
+                    ->run();
             }
             else{
-                require "view/cep/index.php";
+                $View
+                    ->setView("cep.index")
+                    ->run();
             }
         }
     }

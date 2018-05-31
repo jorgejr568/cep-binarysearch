@@ -2,6 +2,7 @@
 namespace CEPSearcher;
 
 use CEPSearcher\Controller\AddressController;
+use CEPSearcher\Controller\HomeController;
 use CEPSearcher\Controller\ProvaRefractorController;
 
 class App{
@@ -70,8 +71,9 @@ class App{
         }
     }
     public function index(){
-        $applications=config("applications");
-        require "view/index.php";
+        $HomeController = new HomeController();
+
+        $HomeController->index();
     }
 }
 

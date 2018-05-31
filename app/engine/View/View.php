@@ -15,6 +15,7 @@ class View
     private $view;
 
     private $variables;
+
     /**
      * View constructor.
      * @param null $view
@@ -22,6 +23,7 @@ class View
     public function __construct($view = null)
     {
         $this->view = $view;
+        return $this;
     }
 
     /**

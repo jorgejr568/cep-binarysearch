@@ -10,6 +10,7 @@ namespace CEPSearcher\Controller;
 
 
 use CEPSearcher\Engine\File\File;
+use CEPSearcher\Engine\View\View;
 use CEPSearcher\Exception\InvalidLineProvaDummy;
 use CEPSearcher\Model\ProvaDummy;
 
@@ -20,7 +21,7 @@ class ProvaRefractorController extends Controller
     private $dummy_websites_filtered_path="data/prova-dummy-website.dat";
     private $dummy_disordered_path="data/prova-dummy-desordered.dat";
     private $dummy_merge_path="data/prova-dummy-merge.dat";
-    private $view_path="view/prova-refractor";
+    private $view_path="prova-refractor";
 
 
     private function processExercise1(File $dummy_dat,File $dummy_reverse){
@@ -155,7 +156,13 @@ class ProvaRefractorController extends Controller
             if($this->searchOnOrdered($file_ordered,$dummy_size,$register_id,0,$dummy_ordered_register_count-1)) $file_merged->write($dummy_line,NULL,$dummy_size);
         }
         $file_merged->close()->open($this->dummy_merge_path,"r");
-        require $this->view_path."/exercise-3.php";
+        $View = new View();
+        $View
+            ->setView($this->view_path.".exercise-3")
+            ->setVariable(
+                compact(['file_merged',"file_ordered","file_disordered","dummy_size","dummy_template"])
+            )
+            ->run();
         $file_disordered->close();
         $file_ordered->close();
         $file_merged->close();

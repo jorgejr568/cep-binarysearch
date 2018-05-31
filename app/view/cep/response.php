@@ -65,7 +65,7 @@
 
             <div class="row">
                 <div class="col-md-6 col-lg-6 col-lg-offset-3 col-md-offset-3 col-sm-12 col-sm-offset-0">
-                    <h4 class="text-success" id="arrayConsultsCollapseAction"><i class="far fa-plus-square"></i> Array consults (<?= count($this->consults());?>)</h4>
+                    <h4 class="text-success" id="arrayConsultsCollapseAction"><i class="far fa-plus-square"></i> Array consults (<?= count($consults);?>)</h4>
                     <div class="row" id="arrayConsultsCollapse">
                         <div class="col-xs-12">
                             <hr>
@@ -88,7 +88,7 @@
                                         }
                                     }
                                 ?>
-                                <?php foreach ($this->consults() as $i => $consult):?>
+                                <?php foreach ($consults as $i => $consult):?>
 
                                     <tr>
                                         <td><b><?= ($i+1);?></b></td>

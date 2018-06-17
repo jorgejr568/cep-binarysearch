@@ -20,7 +20,7 @@ class BolsaHashController extends Controller
 {
     const DEFAULT_HEADER_LINE=0;
     const DEFAULT_BITE_LINE=200;
-    const CRYPT_USED="sha1";
+    const CRYPT_USED="sha512";
     public function __construct()
     {
 
@@ -44,13 +44,13 @@ class BolsaHashController extends Controller
                         foreach (config('bolsa_template') as $field) {
                             $BolsaHash = new BolsaHash(hash(self::CRYPT_USED, $BolsaUser->{"get".$field}()), (string)$offset, (string)$next_break);
                             $BolsaHash->save($field);
-                            echo $BolsaHash->getHash() . PHP_EOL;
+                            echo $count_lines.PHP_EOL;
                         }
                     } catch (InvalidBolsaLineException $e) {
                         die($e->getMessage());
                     }
                 }
-                if($count_lines==500000) break;
+                if($count_lines==15000) break;
                 $offset=$offset+$next_break+1;
                 $File->seek($offset);
                 $count_lines++;
@@ -61,30 +61,6 @@ class BolsaHashController extends Controller
             }
 
         }while(true);
-    }
-
-    public function map_ordered_generated_file(){
-        $Sort = new Sort();
-        /** @var File $File */
-        $File = File::create("data/bolsa-.pak","w+");
-        $Hashs = [];
-        $HashSize = array_sum(config("bolsa_hash_template"));
-        do{
-            $line = $File->r($HashSize);
-            if($File->eof()) break;
-            $Hashs[] = BolsaHash::create($line);
-        }while(true);
-        $File->close();
-        $HashsSorted=$Sort->quick_sort($Hashs,function (BolsaHash $a,BolsaHash $b){
-            return (strcmp($a->getHash(),$b->getHash())<0);
-        });
-        $HashSortedFile = File::create("data/bolsa-hash/NISFAVORECIDO-sorted.pak","w+");
-        foreach ($HashsSorted as $hash){
-            /** @var BolsaHash $hash */
-            $hash_line = $hash->toLine();
-            $HashSortedFile->write($hash_line,null);
-        }
-        $HashSortedFile->close();
     }
 
     public function index(){

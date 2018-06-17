@@ -23,9 +23,8 @@
                         </div>
                         <div class="col-md-8">
                             <select class="form-control" name="field" id="field" required>
-                                <option value="">SELECIONE UMA OPÇÃO</option>
                                 <?php foreach ($BT as $field):?>
-                                    <option value="<?= $field;?>"><?= $field;?></option>
+                                    <option value="<?= $field;?>" <?= $field=="NISFavorecido"?"selected":"";?>><?= $field;?></option>
                                 <?php endforeach;?>
                             </select>
                         </div>

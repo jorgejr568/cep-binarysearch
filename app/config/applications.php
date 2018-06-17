@@ -38,5 +38,19 @@ return [
             ]
         ]
 
-    ]
+    ],
+    "hash-mapper" => [
+        "type" => "segment",
+        "name" => "Mapa HASH",
+        "projects" => [
+            "hash-mapper" => [
+                "file" => "bolsa-hash.php",
+                "name" => "Bolsa família",
+                "description" => "CRUD (Create, read, update, delete) - Hashmap baseado no arquivo csv do Bolsa Família (1.6GB). 
+                                  <br><br>OBS: Necessário gerar o hashmap (bolsa-hash-generator.php) primeiro."
+            ]
+        ]
+
+    ],
+
 ];

@@ -78,11 +78,22 @@ class App{
     }
     public function bolsaHash($action=null){
         $BolsaController = new BolsaHashController();
-        if($action=="generate"){
-            $BolsaController->generate();
-        }
-        else{
-            $BolsaController->index();
+
+        switch ($action){
+            case "create":
+                $BolsaController->create();
+                break;
+            case "delete":
+                $BolsaController->remove();
+                break;
+            case "update":
+                $BolsaController->update();
+                break;
+            case "generate":
+                $BolsaController->generate();
+                break;
+            default:
+                $BolsaController->index();
         }
     }
 }

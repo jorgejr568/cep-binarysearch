@@ -10,7 +10,6 @@ namespace CEPSearcher\Controller;
 
 
 use CEPSearcher\Engine\File\File;
-use CEPSearcher\Engine\Sort\Sort;
 use CEPSearcher\Engine\View\View;
 use CEPSearcher\Exception\InvalidBolsaLineException;
 use CEPSearcher\Model\BolsaHash;
@@ -20,7 +19,7 @@ class BolsaHashController extends Controller
 {
     const DEFAULT_HEADER_LINE=0;
     const DEFAULT_BITE_LINE=200;
-    const CRYPT_USED="sha512";
+    const CRYPT_USED="md5";
     public function __construct()
     {
 
@@ -50,7 +49,7 @@ class BolsaHashController extends Controller
                         die($e->getMessage());
                     }
                 }
-                if($count_lines==15000) break;
+                if($count_lines==2000) break;
                 $offset=$offset+$next_break+1;
                 $File->seek($offset);
                 $count_lines++;
@@ -85,15 +84,19 @@ class BolsaHashController extends Controller
                 do{
                     $line = $BHF->r($BHT_size);
                     if($BHF->eof()) break;
-                    $BolsaUser = (BolsaHash::create($line))->BolsaUser();
-                    if($BolsaUser->{"get".$Field}() == $Search)
-                        $BolsaUsers[] = $BolsaUser;
+                    $BolsaHash = BolsaHash::create($line);
+                    $BolsaUser = $BolsaHash->BolsaUser();
+                    if($BolsaUser->{"get".$Field}() == $Search && $BolsaHash->valid())
+                        $BolsaUsers[] = [
+                            "user" => $BolsaUser,
+                            "hash" => $BolsaHash
+                        ];
 
                 }while(true);
                 $BHF->close();
             }
             $View
-                ->setView("bolsa-hash.response")
+                ->setView("bolsa-hash.search")
                 ->setVariable("BolsaUsers",$BolsaUsers)
                 ->setVariable(compact(['Field',"Search","SearchCrypted"]))
                 ->run();
@@ -101,6 +104,142 @@ class BolsaHashController extends Controller
         else{
             $View
                 ->setView("bolsa-hash.index")
+                ->run();
+        }
+    }
+
+    public function create(){
+        $View = new View();
+        $BT = config('bolsa_template');
+        if($this->isPost()){
+            $data = [];
+            foreach ($BT as $config) $data[$config] = isset($_POST[$config]) ? trim($_POST[$config]) : null;
+            $errors = [];
+
+            foreach ($data as $info => $datum) if(strlen($datum)<1) $errors[] = "$info -> Este campo precisa ser preenchido";
+            if(count($errors)>0){
+                header("Location: bolsa-hash-create.php?".http_build_query(["errors" => $errors,"old" => $data]));
+                exit;
+            }
+
+            $BolsaUser = new BolsaUser();
+            foreach ($data as $info => $datum) $BolsaUser->{"set".$info}($datum);
+
+
+            $BolsaUser->save();
+
+            $View
+                ->setView("bolsa-hash.stored")
+                ->setVariable([
+                    "BT" => $BT,
+                    "BolsaUser" => $BolsaUser,
+                ])
+                ->run();
+
+        }else{
+            $errors = isset($_GET['errors'])? $_GET['errors'] : [];
+            $old = isset($_GET['old'])? $_GET['old'] : null;
+            $View
+                ->setVariable("BT",$BT)
+                ->setVariable("errors",$errors)
+                ->setVariable("old",$old)
+                ->setView("bolsa-hash.create")
+                ->run();
+        }
+    }
+    public function remove(){
+        $View = new View();
+        $BT = config('bolsa_template');
+        if($this->isPost()){
+
+            $length = isset($_POST['length']) ? $_POST['length'] : null;
+            $offset = isset($_POST['offset']) ? $_POST['offset'] : null;
+            $BolsaHash = new BolsaHash(null,$offset,$length);
+
+            $BolsaHash->delete();
+
+            $View
+                ->setView("bolsa-hash.deleted")
+                ->setVariable([
+                    "BT" => $BT,
+                    "BolsaHash" => $BolsaHash,
+                ])
+                ->run();
+
+        }else{
+            $length = isset($_GET['length']) ? $_GET['length'] : null;
+            $offset = isset($_GET['offset']) ? $_GET['offset'] : null;
+            $BolsaHash = new BolsaHash(null,$offset,$length);
+
+            if($BolsaHash->valid()) $BolsaUser= $BolsaHash->BolsaUser();
+            else $BolsaUser = null;
+            $View
+                ->setVariable([
+                    "BT" => $BT,
+                    "BolsaUser" => $BolsaUser,
+                    "offset" => $offset,
+                    "length" => $length
+                ])
+                ->setView("bolsa-hash.remove")
+                ->run();
+        }
+    }
+
+    public function update(){
+        $View = new View();
+        $BT = config('bolsa_template');
+        if($this->isPost()){
+            $length = isset($_POST['length']) ? $_POST['length'] : null;
+            $offset = isset($_POST['offset']) ? $_POST['offset'] : null;
+
+            $data = [];
+            foreach ($BT as $config) $data[$config] = isset($_POST[$config]) ? trim($_POST[$config]) : null;
+            $errors = [];
+
+            foreach ($data as $info => $datum) if(strlen($datum)<1) $errors[] = "$info -> Este campo precisa ser preenchido";
+            if(count($errors)>0){
+                header("Location: bolsa-hash-update.php?".http_build_query(["errors" => $errors,"old" => $data,
+                        "offset" => $offset,"length" => $length]));
+                exit;
+            }
+
+            $BolsaUser = new BolsaUser();
+            foreach ($data as $info => $datum) $BolsaUser->{"set".$info}($datum);
+
+            $BolsaHash = new BolsaHash(null,$offset,$length);
+
+            $BolsaHash->delete();
+
+            $BolsaUser->save();
+
+            $View
+                ->setView("bolsa-hash.updated")
+                ->setVariable([
+                    "BT" => $BT,
+                    "BolsaUser" => $BolsaUser,
+                ])
+                ->run();
+
+        }else{
+            $errors = isset($_GET['errors'])? $_GET['errors'] : [];
+            $old = isset($_GET['old'])? $_GET['old'] : null;
+
+            $length = isset($_GET['length']) ? $_GET['length'] : null;
+            $offset = isset($_GET['offset']) ? $_GET['offset'] : null;
+            $BolsaHash = new BolsaHash(null,$offset,$length);
+
+            if($BolsaHash->valid()) $BolsaUser= $BolsaHash->BolsaUser();
+            else $BolsaUser = null;
+            $View
+                ->setVariable("errors",$errors)
+                ->setVariable("old",$old)
+                ->setVariable([
+                    "BT" => $BT,
+                    "BolsaUser" => $BolsaUser,
+                    "offset" => $offset,
+                    "length" => $length
+                ])
+                ->setView("bolsa-hash.edit")
                 ->run();
         }
     }

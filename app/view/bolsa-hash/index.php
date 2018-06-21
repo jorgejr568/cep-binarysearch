@@ -11,10 +11,15 @@
 </head>
 <body>
 <div class="container-fluid">
-    <h1 class="text-primary text-center">Bolsa Família - CRUD</h1>
-    <hr>
     <div class="row">
         <div class="col-md-6 col-lg-6 col-sm-8 col-md-offset-3 col-sm-offset-2 col-lg-offset-3">
+            <h1 class="text-primary text-center">
+                Bolsa Família - CRUD
+                <span class="pull-right">
+                    <a href="bolsa-hash-create.php"><i class="fa fa-fw fa-plus-square" data-title="Cadastrar novo" style="cursor: pointer" data-placement="bottom"></i></a>
+                </span>
+            </h1>
+            <hr>
             <form class="form-horizontal" method="POST">
                 <div class="row">
                     <div class="form-group">
@@ -50,5 +55,17 @@
         </div>
     </div>
 </div>
+<script
+        src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+        crossorigin="anonymous"
+></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"
+></script>
+<script defer type="text/javascript">
+    $('[data-title]').tooltip();
+</script>
 </body>
 </html>

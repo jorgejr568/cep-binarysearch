@@ -143,16 +143,21 @@ class BolsaHash
     }
 
     public function valid(){
-        $File = File::create("data/bolsa-hash/DELETED_REGISTERS.pak","r");
-        $template = config("bolsa_hash_template");
-        $template_len = array_sum($template);
-        do {
-            $line = $File->r($template_len);
-            if($File->eof()) break;
-            $BolsaHash = BolsaHash::create($line);
-            if($this->offset==(int) $BolsaHash->getOffset() && $this->size== (int) $BolsaHash->getSize()) return false;
-        }while(true);
-        return true;
+        $deleted_registers_path = "data/bolsa-hash/DELETED_REGISTERS.pak";
+
+        if(!file_exists("data/bolsa-hash/DELETED_REGISTERS.pak")) return true;
+        else {
+            $File = File::create("data/bolsa-hash/DELETED_REGISTERS.pak", "r");
+            $template = config("bolsa_hash_template");
+            $template_len = array_sum($template);
+            do {
+                $line = $File->r($template_len);
+                if ($File->eof()) break;
+                $BolsaHash = BolsaHash::create($line);
+                if ($this->offset == (int)$BolsaHash->getOffset() && $this->size == (int)$BolsaHash->getSize()) return false;
+            } while (true);
+            return true;
+        }
     }
 
     public function delete(){

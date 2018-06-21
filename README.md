@@ -11,8 +11,17 @@ git clone git@github.com:jorgejr568/file-structure-organization-algorithms.git
 cd file-structure-organization-algorithms/ 
 # ENTERING ON DIRECTORY
 
+wget https://jorgejuniorx.com.br/projects/cefet-rj/file-structure-organization-algorithms/app/data/bolsa.zip -O ./app/data/bolsa.zip
+# DOWNLOADING BOLSA ZIP
+
 unzip -d ./app/data ./app/data/cep.zip
-# UNZIPING DAT FILES
+# UNZIPING CEP DAT FILE
+
+unzip -d ./app/data ./app/data/bolsa.zip
+# UNZIPING BOLSA DAT FILE
+
+php ./bolsa-hash-generator.php
+# MAPPING BOLSA PAK FILES
 
 cd ../..
 # GOING BACK TO PROJECT ROOT

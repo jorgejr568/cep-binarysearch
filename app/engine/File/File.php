@@ -55,7 +55,10 @@ class File
         if($offset===0) $this->rewind();
         elseif($offset>0) $this->seek($offset);
 
-        fwrite($this->stream,$content,$length);
+        if($length===null) fwrite($this->stream,$content);
+        else fwrite($this->stream,$content,$length);
+
+        return $this;
     }
 
     public function eof(){

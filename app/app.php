@@ -2,6 +2,7 @@
 namespace CEPSearcher;
 
 use CEPSearcher\Controller\AddressController;
+use CEPSearcher\Controller\BolsaHashController;
 use CEPSearcher\Controller\HomeController;
 use CEPSearcher\Controller\ProvaRefractorController;
 
@@ -74,6 +75,26 @@ class App{
         $HomeController = new HomeController();
 
         $HomeController->index();
+    }
+    public function bolsaHash($action=null){
+        $BolsaController = new BolsaHashController();
+
+        switch ($action){
+            case "create":
+                $BolsaController->create();
+                break;
+            case "delete":
+                $BolsaController->remove();
+                break;
+            case "update":
+                $BolsaController->update();
+                break;
+            case "generate":
+                $BolsaController->generate();
+                break;
+            default:
+                $BolsaController->index();
+        }
     }
 }
 

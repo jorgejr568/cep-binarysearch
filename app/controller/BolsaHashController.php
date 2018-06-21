@@ -19,7 +19,9 @@ class BolsaHashController extends Controller
 {
     const DEFAULT_HEADER_LINE=0;
     const DEFAULT_BITE_LINE=200;
-    const CRYPT_USED="md5";
+    const CRYPT_USED="sha512";
+    const GENERATE_REGISTERS=5000;
+
     public function __construct()
     {
 
@@ -49,7 +51,7 @@ class BolsaHashController extends Controller
                         die($e->getMessage());
                     }
                 }
-                if($count_lines==2000) break;
+                if($count_lines==self::GENERATE_REGISTERS) break;
                 $offset=$offset+$next_break+1;
                 $File->seek($offset);
                 $count_lines++;

@@ -9,6 +9,8 @@
 namespace CEPSearcher\Model;
 
 
+use CEPSearcher\Controller\BolsaHashController;
+use CEPSearcher\Engine\File\File;
 use CEPSearcher\Exception\InvalidBolsaLineException;
 
 class BolsaUser
@@ -334,5 +336,34 @@ class BolsaUser
             }
         }
         return $BolsaUser;
+    }
+    public function toLine(){
+        $template = config("bolsa_template");
+        $line="";
+        foreach ($template as $key => $field) {
+            $line.=$this->{"get".$field}();
+            $line .= (count($template) == ($key + 1) ? "\n" : "\t");
+        }
+        return $line;
+    }
+
+    public function save(){
+        $line= $this->toLine();
+        $line_len = strlen($line);
+        $offset = filesize("data/bolsa.csv");
+
+        $File = (File::create("data/bolsa.csv","a"));
+        $File->write($line)->close();
+
+
+        foreach (config('bolsa_template') as $field) {
+            $BolsaHash = new BolsaHash(
+                hash(BolsaHashController::CRYPT_USED, $this->{"get".$field}()),
+                (string) $offset,
+                (string) $line_len
+            );
+
+            $BolsaHash->save($field);
+        }
     }
 }

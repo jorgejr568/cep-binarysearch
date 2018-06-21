@@ -124,7 +124,6 @@ class BolsaHash
         $hash_map_line_size = array_sum(config("bolsa_hash_template"));
         if(file_exists($hash_map_file)) {
             $File = File::create($hash_map_file, "a");
-            echo "CONFLITO ENCONTRADO!".PHP_EOL;
         }
         else $File = File::create($hash_map_file,"w+");
 
@@ -141,5 +140,25 @@ class BolsaHash
         } catch (InvalidBolsaLineException $e) {
             die($e->getMessage());
         }
+    }
+
+    public function valid(){
+        $File = File::create("data/bolsa-hash/DELETED_REGISTERS.pak","r");
+        $template = config("bolsa_hash_template");
+        $template_len = array_sum($template);
+        do {
+            $line = $File->r($template_len);
+            if($File->eof()) break;
+            $BolsaHash = BolsaHash::create($line);
+            if($this->offset==(int) $BolsaHash->getOffset() && $this->size== (int) $BolsaHash->getSize()) return false;
+        }while(true);
+        return true;
+    }
+
+    public function delete(){
+        $File = File::create("data/bolsa-hash/DELETED_REGISTERS.pak","a");
+        $File->write($this->toLine());
+        $File->close();
+        return $this;
     }
 }

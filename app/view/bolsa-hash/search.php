@@ -24,16 +24,31 @@
                         <table class="table table-bordered table-hover table-centered">
                             <thead>
                             <tr>
+                                <th></th>
                                 <?php foreach ($BT as $field):?>
                                     <th><?= $field;?></th>
                                 <?php endforeach;?>
                             </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($BolsaUsers as $user):?>
+                                <?php foreach ($BolsaUsers as $bolsa_data):?>
                                     <tr>
+                                        <td>
+                                            <a href="bolsa-hash-delete.php?<?= http_build_query([
+                                                    "offset" => trim($bolsa_data['hash']->getOffset()),
+                                                    "length" => trim($bolsa_data['hash']->getSize())]);?>"
+                                               class="text-danger">
+                                                <i class="fa fa-fw fa-times-circle"></i>
+                                            </a>
+                                            <a href="bolsa-hash-update.php?<?= http_build_query([
+                                                    "offset" => trim($bolsa_data['hash']->getOffset()),
+                                                    "length" => trim($bolsa_data['hash']->getSize())]);?>"
+                                               class="text-warning">
+                                                <i class="fa fa-fw fa-pencil-alt"></i>
+                                            </a>
+                                        </td>
                                         <?php foreach ($BT as $field):?>
-                                            <td><?= $user->{"get".$field}();?></td>
+                                            <td><?= $bolsa_data['user']->{"get".$field}();?></td>
                                         <?php endforeach;?>
                                     </tr>
                                 <?php endforeach;?>

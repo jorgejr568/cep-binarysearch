@@ -10,6 +10,7 @@ namespace CEPSearcher\Controller;
 
 
 use CEPSearcher\Engine\File\File;
+use CEPSearcher\Engine\Hash\Hash;
 use CEPSearcher\Engine\View\View;
 use CEPSearcher\Exception\InvalidBolsaLineException;
 use CEPSearcher\Model\BolsaHash;
@@ -43,7 +44,7 @@ class BolsaHashController extends Controller
                     try {
                         $BolsaUser = BolsaUser::create($line);
                         foreach (config('bolsa_template') as $field) {
-                            $BolsaHash = new BolsaHash(hash(self::CRYPT_USED, $BolsaUser->{"get".$field}()), (string)$offset, (string)$next_break);
+                            $BolsaHash = new BolsaHash(Hash::bolsa($BolsaUser->{"get".$field}()), (string)$offset, (string)$next_break);
                             $BolsaHash->save($field);
                             echo $count_lines.PHP_EOL;
                         }
@@ -71,7 +72,7 @@ class BolsaHashController extends Controller
         if($this->isPost()){
             $Field          =   $_POST['field'];
             $Search         =   $_POST['value'];
-            $SearchCrypted  =   hash(self::CRYPT_USED,$Search);
+            $SearchCrypted  =   Hash::bolsa(self::CRYPT_USED);
 
             $FieldMapper    =   "data/bolsa-hash/".strtoupper($Field);
 

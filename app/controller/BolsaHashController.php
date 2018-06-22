@@ -20,8 +20,7 @@ class BolsaHashController extends Controller
 {
     const DEFAULT_HEADER_LINE=0;
     const DEFAULT_BITE_LINE=200;
-    const CRYPT_USED="sha512";
-    const GENERATE_REGISTERS=400000;
+    const GENERATE_REGISTERS=-1;
 
     public function __construct()
     {
@@ -29,10 +28,13 @@ class BolsaHashController extends Controller
     }
     public function generate(){
         $BT = config('bolsa_template');
+        $bolsa_path= getcwd()."/data/bolsa-hash/";
         foreach ($BT as $bolsa_folder){
-            $bolsa_path = getcwd()."/data/bolsa-hash/".strtoupper($bolsa_folder);
-            if(is_dir($bolsa_path) ) shell_exec("rm -Rf {$bolsa_path}");
+            $bolsa_field_path = $bolsa_path.strtoupper($bolsa_folder);
+            if(is_dir($bolsa_field_path) ) shell_exec("rm -Rf {$bolsa_field_path}");
         }
+        if(file_exists($bolsa_path."/DELETED_REGISTERS.pak") ) shell_exec("rm -Rf {$bolsa_path}/DELETED_REGISTERS.pak");
+
         $File = File::create("data/bolsa.csv","r");
         $count_lines=0;
         $line="";

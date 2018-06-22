@@ -14,7 +14,7 @@
         <?php
         if(count($BolsaUsers)>0):?>
             <h1 class="text-success">Resultado para busca</h1>
-            <h2 style="font-size: 16px;margin-top: -5px"><?= $Field;?>=<?= $Search;?>(<?= $SearchCrypted;?>)</h2>
+            <h2 style="font-size: 16px;margin-top: -5px"><?= $Field;?>=<?= $Search;?>(<span data-title="<?= "app/data/bolsa-hash/".strtoupper($Field).DIRECTORY_SEPARATOR.$SearchCrypted.".pak";?>" data-placement="right"><?= $SearchCrypted;?>)</span></h2>
             <hr>
             <div class="row">
                 <div class="col-xs-12">
@@ -67,5 +67,18 @@
         <?php endif;?>
         <a href="bolsa-hash.php" class="btn btn-danger pull-right">VOLTAR</a>
     </div>
+
+    <script
+            src="https://code.jquery.com/jquery-3.3.1.js"
+            integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+            crossorigin="anonymous"
+    ></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"
+    ></script>
+    <script defer type="text/javascript">
+        $('[data-title]').tooltip();
+    </script>
 </body>
 </html>

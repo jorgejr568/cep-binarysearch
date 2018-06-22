@@ -21,13 +21,18 @@ class BolsaHashController extends Controller
     const DEFAULT_HEADER_LINE=0;
     const DEFAULT_BITE_LINE=200;
     const CRYPT_USED="sha512";
-    const GENERATE_REGISTERS=5000;
+    const GENERATE_REGISTERS=400000;
 
     public function __construct()
     {
 
     }
     public function generate(){
+        $BT = config('bolsa_template');
+        foreach ($BT as $bolsa_folder){
+            $bolsa_path = getcwd()."/data/bolsa-hash/".strtoupper($bolsa_folder);
+            if(is_dir($bolsa_path) ) shell_exec("rm -Rf {$bolsa_path}");
+        }
         $File = File::create("data/bolsa.csv","r");
         $count_lines=0;
         $line="";
@@ -43,7 +48,7 @@ class BolsaHashController extends Controller
                 if($count_lines!=self::DEFAULT_HEADER_LINE) {
                     try {
                         $BolsaUser = BolsaUser::create($line);
-                        foreach (config('bolsa_template') as $field) {
+                        foreach ($BT as $field) {
                             $BolsaHash = new BolsaHash(Hash::bolsa($BolsaUser->{"get".$field}()), (string)$offset, (string)$next_break);
                             $BolsaHash->save($field);
                             echo $count_lines.PHP_EOL;
@@ -72,7 +77,7 @@ class BolsaHashController extends Controller
         if($this->isPost()){
             $Field          =   $_POST['field'];
             $Search         =   $_POST['value'];
-            $SearchCrypted  =   Hash::bolsa(self::CRYPT_USED);
+            $SearchCrypted  =   Hash::bolsa($Search);
 
             $FieldMapper    =   "data/bolsa-hash/".strtoupper($Field);
 
@@ -80,6 +85,7 @@ class BolsaHashController extends Controller
             $PakFile        =   $FieldMapper.DIRECTORY_SEPARATOR.$SearchCrypted.".pak";
             $BHT            =   config("bolsa_hash_template");
             $BHT_size       =   array_sum($BHT);
+
             if(file_exists($PakFile)) {
                 /** @var File $BHF */
                 $BHF = File::create($PakFile,"r");

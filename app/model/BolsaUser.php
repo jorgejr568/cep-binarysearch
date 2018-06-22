@@ -11,6 +11,7 @@ namespace CEPSearcher\Model;
 
 use CEPSearcher\Controller\BolsaHashController;
 use CEPSearcher\Engine\File\File;
+use CEPSearcher\Engine\Hash\Hash;
 use CEPSearcher\Exception\InvalidBolsaLineException;
 
 class BolsaUser
@@ -358,7 +359,7 @@ class BolsaUser
 
         foreach (config('bolsa_template') as $field) {
             $BolsaHash = new BolsaHash(
-                hash(BolsaHashController::CRYPT_USED, $this->{"get".$field}()),
+                Hash::bolsa($this->{"get".$field}()),
                 (string) $offset,
                 (string) $line_len
             );

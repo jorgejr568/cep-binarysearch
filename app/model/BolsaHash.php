@@ -134,6 +134,9 @@ class BolsaHash
         $File = File::create("data/bolsa.csv","r");
 
         $line = $File->read(((int) $this->size)-1,(int) $this->offset);
+        if (mb_detect_encoding($line, 'utf-8', true) === false) {
+            $line = mb_convert_encoding($line, 'utf-8', 'iso-8859-1');
+        }
         $File->close();
         try {
             return BolsaUser::create($line);

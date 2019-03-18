@@ -12,7 +12,7 @@ namespace CEPSearcher\Engine\Hash;
 class Hash
 {
     const BOLSA_HASH                 =   "crc32b";
-    const BOLSA_HASH_FILE_LIMITER    =   92000;
+    const BOLSA_HASH_FILE_LIMITER    =   184000;
 
     /**
      * @param $v

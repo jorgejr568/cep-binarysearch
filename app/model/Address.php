@@ -136,15 +136,15 @@ class Address
      * @throws InvalidLineAddress
      */
     public static function create_from_line($line){
-        if(strlen($line)!=300) throw new InvalidLineAddress();
+        if(mb_strlen($line)!=300) throw new InvalidLineAddress();
         $address=new Address();
         return $address
-            ->logradouro(substr($line,0,72))
-            ->bairro(substr($line,72,72))
-            ->cidade(substr($line,144,72))
-            ->estado(substr($line,216,72))
-            ->uf(substr($line,288,2))
-            ->cep(substr($line,290,8));
+            ->logradouro(mb_substr($line,0,72))
+            ->bairro(mb_substr($line,72,72))
+            ->cidade(mb_substr($line,144,72))
+            ->estado(mb_substr($line,216,72))
+            ->uf(mb_substr($line,288,2))
+            ->cep(mb_substr($line,290,8));
     }
 
     public function blank_space(){

@@ -158,7 +158,7 @@ class AddressController extends Controller
         $file->close();
         return $address;
     }
-    public function run(){
+    public function run($api){
         if(php_sapi_name()=="cli"){
             /*
              * IF is console executed
@@ -185,39 +185,70 @@ class AddressController extends Controller
             }
         }
         else {
-            $View = new View();
-            if($this->isPost()) {
+            if($api){
+                header("Content-type: application/json; charset=utf-8");
+                $cep = $_GET['cep'];
 
-                header("Content-type: text/html; charset=utf-8");
-
-                if (!isset($_POST['cep'])) {
-                    header("HTTP/1.1 401 CEP wasn't informed!");
-                    echo "<h1>ERRO 401 - CEP wasn't informed!</h1>";
-                    exit(500);
-                }
-                $cep = $_POST['cep'];
                 try {
                     /** @var Address $address */
                     $address = $this->abstractProcedure($cep);
                 } catch (InvalidCEPFormat $exception) {
+                    echo json_encode(["error" => true]);
                     header("HTTP/1.1 " . $exception->getCode() . " " . $exception->getMessage());
-                    echo "<h1>ERRO " . $exception->getCode() . " - " . $exception->getMessage() . "</h1>";
-                    exit($exception->getCode());
+                    die();
                 }
-                if ($address) header("HTTP/1.1 200 OK");
-                else header("HTTP/1.1 404 CEP NOT FOUND");
-                $View
-                    ->setView("cep.response")
-                    ->setVariable([
-                        "address" => $address,
-                        "consults" => $this->consults
-                    ])
-                    ->run();
+                if ($address){
+                    header("HTTP/1.1 200 OK");
+                    echo json_encode([
+                        'code' => trim($address->cep()),
+                        'state' => trim($address->estado()),
+                        'city' => trim($address->cidade()),
+                        'district' => trim($address->bairro()),
+                        'street' => trim($address->logradouro())
+                    ]);
+                }
+
+                else {
+                    header("HTTP/1.1 404 Not found");
+                    echo json_encode(["error" => true]);
+                    die();
+                }
+
             }
-            else{
-                $View
-                    ->setView("cep.index")
-                    ->run();
+            else {
+                $View = new View();
+                if ($this->isPost()) {
+
+                    header("Content-type: text/html; charset=utf-8");
+
+                    if (!isset($_POST['cep'])) {
+                        header("HTTP/1.1 401 CEP wasn't informed!");
+                        echo "<h1>ERRO 401 - CEP wasn't informed!</h1>";
+                        exit(500);
+                    }
+                    $cep = $_POST['cep'];
+                    try {
+                        /** @var Address $address */
+                        $address = $this->abstractProcedure($cep);
+                    } catch (InvalidCEPFormat $exception) {
+                        header("HTTP/1.1 " . $exception->getCode() . " " . $exception->getMessage());
+                        echo "<h1>ERRO " . $exception->getCode() . " - " . $exception->getMessage() . "</h1>";
+                        exit($exception->getCode());
+                    }
+                    if ($address) header("HTTP/1.1 200 OK");
+                    else header("HTTP/1.1 404 CEP NOT FOUND");
+                    $View
+                        ->setView("cep.response")
+                        ->setVariable([
+                            "address" => $address,
+                            "consults" => $this->consults
+                        ])
+                        ->run();
+                } else {
+                    $View
+                        ->setView("cep.index")
+                        ->run();
+                }
             }
         }
     }

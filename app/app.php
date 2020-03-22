@@ -50,9 +50,9 @@ class App{
             }
         }
     }
-    public function cepExercise(){
+    public function cepExercise($api = false){
         $addressController=new AddressController();
-        $addressController->run();
+        $addressController->run($api);
     }
     public function provaRefractor($exercise){
         $ProvaRefractorController=new ProvaRefractorController();

@@ -30,7 +30,7 @@ class File
         if($offset){
             $this->seek($offset);
         }else rewind($this->stream);
-        return fread($this->stream,$bytes);
+        return mb_convert_encoding(fread($this->stream,$bytes),'UTF-8','ISO-8859-1');
     }
 
     public function r($bytes){
